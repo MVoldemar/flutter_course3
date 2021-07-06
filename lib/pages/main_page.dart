@@ -87,6 +87,7 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.nothingFound:
           case MainPageState.loadingError:
           case MainPageState.searchResults:
+            return SearchResultPage();
           case MainPageState.favorites:
             return YourFavoritesPage();
           default:
@@ -97,6 +98,51 @@ class MainPageStateWidget extends StatelessWidget {
             ));
         }
       },
+    );
+  }
+}
+
+class SearchResultPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          height: 90,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            "Search results",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(name: 'Batman',
+            realName: 'Bruce Wayne',
+            imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Padding(padding: EdgeInsets.symmetric(horizontal: 16),
+            child: SuperheroCard(name: 'Venom',
+              realName: 'Eddie Brock',
+              imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg.',
+            )
+        ),
+
+      ],
     );
   }
 }
