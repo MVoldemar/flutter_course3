@@ -128,7 +128,7 @@ class SearchResultPage extends StatelessWidget {
         Padding(padding: EdgeInsets.symmetric(horizontal: 16),
           child: SuperheroCard(name: 'Batman',
             realName: 'Bruce Wayne',
-            imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
+            imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg', onTap: () {  },
           ),
         ),
         SizedBox(
@@ -137,7 +137,7 @@ class SearchResultPage extends StatelessWidget {
         Padding(padding: EdgeInsets.symmetric(horizontal: 16),
             child: SuperheroCard(name: 'Venom',
               realName: 'Eddie Brock',
-              imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg.',
+              imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg', onTap: () {  },
             )
         ),
 
@@ -173,7 +173,7 @@ class YourFavoritesPage extends StatelessWidget {
         Padding(padding: EdgeInsets.symmetric(horizontal: 16),
           child: SuperheroCard(name: 'Batman',
             realName: 'Bruce Wayne',
-            imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
+            imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg', onTap: () {  },
           ),
         ),
         SizedBox(
@@ -182,7 +182,7 @@ class YourFavoritesPage extends StatelessWidget {
         Padding(padding: EdgeInsets.symmetric(horizontal: 16),
             child: SuperheroCard(name: 'Ironman',
               realName: 'Tony Stark',
-              imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
+              imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg', onTap: () {  },
             )
         ),
 
