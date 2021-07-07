@@ -83,7 +83,7 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.noFavorites:
             return InfoWithButton(title: "No favorites yet",
                 subtitle: "Search and add",
-                buttonText: "search",
+                buttonText: "Search",
                 assetImage: SuperheroesImages.ironman,
                 imageHeight: 119,
                 imageWidth: 108,
@@ -93,13 +93,12 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.nothingFound:
             return InfoWithButton(title: "Nothing found",
               subtitle: "Search for something else",
-              buttonText: "search",
+              buttonText: "Search",
               assetImage: SuperheroesImages.hulk,
               imageHeight: 112,
               imageWidth: 84,
               imageTopPadding: 16,);
           case MainPageState.loadingError:
-          case MainPageState.searchResults:
             return InfoWithButton(title: "Error happened",
               subtitle: "Please, try again",
               buttonText: "Retry",
@@ -107,6 +106,9 @@ class MainPageStateWidget extends StatelessWidget {
               imageHeight: 106,
               imageWidth: 126,
               imageTopPadding: 22,);
+
+          case MainPageState.searchResults:
+            return SearchResultPage();
           case MainPageState.favorites:
             return YourFavoritesPage();
           default:
