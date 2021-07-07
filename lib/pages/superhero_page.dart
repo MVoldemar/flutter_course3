@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/widgets/action_button.dart';
 
 class SuperheroPage extends StatelessWidget {
-  const SuperheroPage({Key? key}) : super(key: key);
+  final String name;
+  const SuperheroPage({Key? key, required this.name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: SuperheroesColors.grey,
       body: SafeArea(
         child: Stack(
           children: [Center(
             child: Text(
-              "Hello",
+              name,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -19,8 +22,17 @@ class SuperheroPage extends StatelessWidget {
               ),
             ),
           ),
-            ActionButton(text: "", onTap: onTap)
-            ]
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: ActionButton(
+                  text: "back",
+                  onTap: ()=> Navigator.pop(context),
+                ),
+              ),
+            ),
+          ]
         ),
       ),
     );
