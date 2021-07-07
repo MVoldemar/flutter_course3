@@ -5,6 +5,7 @@ import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
 class MainPage extends StatefulWidget {
@@ -80,13 +81,32 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.loading:
             return LoadingIndicator();
           case MainPageState.noFavorites:
-            return NoFavoritesPage();
+            return InfoWithButton(title: "No favorites yet",
+                subtitle: "Search and add",
+                buttonText: "search",
+                assetImage: SuperheroesImages.ironman,
+                imageHeight: 119,
+                imageWidth: 108,
+                imageTopPadding: 9,);
           case MainPageState.minSymbols:
             return MinSymbolsPage();
           case MainPageState.nothingFound:
+            return InfoWithButton(title: "Nothing found",
+              subtitle: "Search for something else",
+              buttonText: "search",
+              assetImage: SuperheroesImages.hulk,
+              imageHeight: 112,
+              imageWidth: 84,
+              imageTopPadding: 16,);
           case MainPageState.loadingError:
           case MainPageState.searchResults:
-            return SearchResultPage();
+            return InfoWithButton(title: "Error happened",
+              subtitle: "Please, try again",
+              buttonText: "Retry",
+              assetImage: SuperheroesImages.supernman,
+              imageHeight: 106,
+              imageWidth: 126,
+              imageTopPadding: 22,);
           case MainPageState.favorites:
             return YourFavoritesPage();
           default:
@@ -187,77 +207,6 @@ class YourFavoritesPage extends StatelessWidget {
         ),
 
       ],
-    );
-  }
-}
-
-
-class NoFavoritesPage extends StatelessWidget {
-  const NoFavoritesPage({
-    Key? key,
-  }) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    width: 108,
-                    height: 108,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: SuperheroesColors.blue,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 9),
-                    child: Image.asset(
-                      SuperheroesImages.ironman,
-                      height: 119,
-                      width: 108,
-                      //fit: BoxFit.fill,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "No favorites yet",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 32,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "SEARCH AND ADD",
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              ActionButton(
-                text: "Search",
-                onTap: () {},
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
