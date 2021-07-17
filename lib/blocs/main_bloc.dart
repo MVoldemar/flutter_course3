@@ -62,7 +62,7 @@ class MainBloc {
     await Future.delayed(Duration(seconds: 1));
     List<SuperheroInfo> searchList = [];
     for(var item in SuperheroInfo.mocked){
-      if(item.name.contains(text)){
+      if(item.name.toLowerCase().contains(text.toLowerCase())){
          searchList.add(item);
       }
     }
