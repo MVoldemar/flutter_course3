@@ -70,7 +70,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance?.addPersistentFrameCallback((timeStamp) {
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
       controller.addListener(() => bloc.updateText(controller.text));
     });
@@ -82,6 +82,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       textInputAction: TextInputAction.search,
       textCapitalization: TextCapitalization.words,
       cursorWidth: 2,
+      cursorColor: Colors.white,
       controller: controller,
       style: TextStyle(
         fontWeight: FontWeight.w400,
@@ -212,6 +213,7 @@ class SuperheroesList extends StatelessWidget {
           }
           final List<SuperheroInfo> superheroes = snapshot.data!;
           return ListView.separated(
+            physics: BouncingScrollPhysics(),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemCount: superheroes.length + 1,
             itemBuilder: (
