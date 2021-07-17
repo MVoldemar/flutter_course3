@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        textTheme: GoogleFonts.openSansTextTheme(
+        textTheme:  GoogleFonts.openSansTextTheme(
           Theme.of(context).textTheme,
         ),
       ),

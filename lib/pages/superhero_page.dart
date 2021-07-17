@@ -9,7 +9,7 @@ class SuperheroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SuperheroesColors.grey,
+      backgroundColor: SuperheroesColors.indigo,
       body: SafeArea(
         child: Stack(
           children: [Center(
