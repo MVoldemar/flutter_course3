@@ -164,7 +164,7 @@ class MainPageStateWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 24),
                 child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
+                    child: ActionButton(text: "Remove", onTap: () {} )),
               )
               ]
             );

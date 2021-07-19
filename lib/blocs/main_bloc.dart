@@ -7,6 +7,7 @@ class MainBloc {
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
   final favoriteSuperheroesSubject =
       BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
+          // .seeded(SuperheroInfo.mocked);
   final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();// проверить
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
