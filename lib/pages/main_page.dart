@@ -72,53 +72,64 @@ class _SearchWidgetState extends State<SearchWidget> {
     super.initState();
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-      controller.addListener(() => bloc.updateText(controller.text));
+      controller.addListener(() {
+        bloc.updateText(controller.text);
+        setState(() {
+        });
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      textInputAction: TextInputAction.search,
-      textCapitalization: TextCapitalization.words,
-      cursorWidth: 2,
-      cursorColor: Colors.white,
-      controller: controller,
-      style: TextStyle(
-        fontWeight: FontWeight.w400,
-        fontSize: 20,
-        color: Colors.white,
-      ),
-      decoration: InputDecoration(
-          filled: true,
-          fillColor: SuperheroesColors.indigo75,
-          focusColor: Colors.white,
-          isDense: true,
-          prefixIcon: Icon(
-            Icons.search,
-            color: Colors.white54,
-            size: 24,
-          ),
-          suffix: GestureDetector(
-              onTap: () {
-                controller.clear();
-              },
-              child: Icon(
-                Icons.clear,
-                color: Colors.white,
-              )),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.white, width: 2,)
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.white24),
-          ),
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: true);
+    return Provider.value(
+      value: bloc,
+      child: TextField(
+        textInputAction: TextInputAction.search,
+        textCapitalization: TextCapitalization.words,
+        cursorWidth: 2,
+        cursorColor: Colors.white,
+        controller: controller,
+        style: TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 20,
+          color: Colors.white,
+        ),
+        decoration:  InputDecoration(
+            filled: true,
+            fillColor: SuperheroesColors.indigo75,
+            focusColor: Colors.white,
+            isDense: true,
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.white54,
+              size: 24,
+            ),
+            suffix: GestureDetector(
+                onTap: () {
+                  controller.clear();
+                },
+                child: Icon(
+                  Icons.clear,
+                  color: Colors.white,
+                )),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.white, width: 2,)
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide:  (controller.text != "") ?
+              BorderSide(color: Colors.white, width: 2,) :
+              BorderSide(color: Colors.white24),
+            ),
 
+
+        ),
       ),
     );
   }

@@ -78,8 +78,8 @@ class MainBloc {
     stateSubject.add(nextState);
   }
 
-  void updateText(final String? text) {
-    currentTextSubject.add(text ?? "");
+ void updateText(final String? text) {
+     currentTextSubject.add(text ?? "");
   }
 
   void dispose() {
