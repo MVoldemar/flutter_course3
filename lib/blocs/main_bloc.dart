@@ -7,7 +7,6 @@ class MainBloc {
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
   final favoriteSuperheroesSubject =
       BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
-          // .seeded(SuperheroInfo.mocked);
   final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();// проверить
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
@@ -86,7 +85,7 @@ class MainBloc {
   }
   void removeFavorite(){
     print("Remove");
-    if(favoriteSuperheroesSubject.value.length == 0 || favoriteSuperheroesSubject.value.isEmpty){
+    if(favoriteSuperheroesSubject.value.length == 0 || !favoriteSuperheroesSubject.hasValue){
       favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
     }
     else {

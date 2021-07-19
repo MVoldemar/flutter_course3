@@ -152,7 +152,19 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.minSymbols:
             return MinSymbolsWidget();
           case MainPageState.noFavorites:
-            return NoFavoritesWidget();
+            return Stack(children: [
+              NoFavoritesWidget(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 24),
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())
+                ),
+              )
+              ],
+            );
+
+
           case MainPageState.favorites:
             return Stack(
                 children: [SuperheroesList(
@@ -189,19 +201,20 @@ class MainPageStateWidget extends StatelessWidget {
 }
 
 class LoadingErrorWidget extends StatelessWidget {
+  const LoadingErrorWidget({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: InfoWithButton(
-        title: "Error happened",
-        subtitle: "Please, try again",
-        buttonText: "Retry",
-        assetImage: SuperheroesImages.supernman,
-        imageHeight: 106,
-        imageWidth: 126,
-        imageTopPadding: 22,
-      ),
+    return InfoWithButton(
+      title: "Error happened",
+      subtitle: "Please, try again",
+      buttonText: "Retry",
+      assetImage: SuperheroesImages.supernman,
+      imageHeight: 106,
+      imageWidth: 126,
+      imageTopPadding: 22,
     );
   }
 }
@@ -210,8 +223,8 @@ class NoFavoritesWidget extends StatelessWidget {
       @override
   Widget build(BuildContext context) {
         final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-    return Stack(
-      children: [InfoWithButton(
+    return Center(
+      child: InfoWithButton(
         title: "No favorites yet",
         subtitle: "Search and add",
         buttonText: "Search",
@@ -220,13 +233,13 @@ class NoFavoritesWidget extends StatelessWidget {
         imageWidth: 108,
         imageTopPadding: 9,
       ),
-        Padding(
-        padding: const EdgeInsets.only(bottom: 24),
-        child: Align(
-            alignment: Alignment.bottomCenter,
-            child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
-      )
-      ]
+      //   Padding(
+      //   padding: const EdgeInsets.only(bottom: 24),
+      //   child: Align(
+      //       alignment: Alignment.bottomCenter,
+      //       child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
+      // )
+
     );
   }
 }
