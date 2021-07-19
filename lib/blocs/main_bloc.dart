@@ -85,7 +85,7 @@ class MainBloc {
   }
   void removeFavorite(){
     print("Remove");
-    if(favoriteSuperheroesSubject.value.length == 0){
+    if(favoriteSuperheroesSubject.value.length == 0 || favoriteSuperheroesSubject.value.isEmpty){
       favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
     }
     else {
