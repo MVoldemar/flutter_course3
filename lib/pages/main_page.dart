@@ -149,68 +149,33 @@ class MainPageStateWidget extends StatelessWidget {
         switch (state) {
           case MainPageState.loading:
             return LoadingIndicator();
-          case MainPageState.noFavorites:
-            return Stack(
-              children: [InfoWithButton(
-                title: "No favorites yet",
-                subtitle: "Search and add",
-                buttonText: "Search",
-                assetImage: SuperheroesImages.ironman,
-                imageHeight: 119,
-                imageWidth: 108,
-                imageTopPadding: 9,
-              ),
-                Padding(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ActionButton(text: "Remove", onTap: () {} )),
-              )
-              ]
-            );
           case MainPageState.minSymbols:
             return MinSymbolsWidget();
-          case MainPageState.nothingFound:
-            return InfoWithButton(
-                title: "Nothing found",
-                subtitle: "Search for something else",
-                buttonText: "Search",
-                assetImage: SuperheroesImages.hulk,
-                imageHeight: 112,
-                imageWidth: 84,
-                imageTopPadding: 16,
-              );
-
-          case MainPageState.loadingError:
-            return InfoWithButton(
-              title: "Error happened",
-              subtitle: "Please, try again",
-              buttonText: "Retry",
-              assetImage: SuperheroesImages.supernman,
-              imageHeight: 106,
-              imageWidth: 126,
-              imageTopPadding: 22,
+          case MainPageState.noFavorites:
+            return NoFavoritesWidget();
+          case MainPageState.favorites:
+            return Stack(
+                children: [SuperheroesList(
+                  title: "Your favorites",
+                  stream: bloc.observeFavoriteSuperheroes(),
+                ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
+                  ),
+                ]
             );
-
           case MainPageState.searchResults:
             return SuperheroesList(
               title: "Search results",
               stream: bloc.observedSearchedSuperheroes(),
             );
-          case MainPageState.favorites:
-            return Stack(
-              children: [SuperheroesList(
-                title: "Your favorites",
-                stream: bloc.observeFavoriteSuperheroes(),
-              ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                      child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
-                ),
-              ]
-            );
+          case MainPageState.nothingFound:
+            return NothingFoundWidget();
+          case MainPageState.loadingError:
+            return LoadingErrorWidget();
           default:
             return Center(
                 child: Text(
@@ -219,6 +184,66 @@ class MainPageStateWidget extends StatelessWidget {
             ));
         }
       },
+    );
+  }
+}
+
+class LoadingErrorWidget extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: InfoWithButton(
+        title: "Error happened",
+        subtitle: "Please, try again",
+        buttonText: "Retry",
+        assetImage: SuperheroesImages.supernman,
+        imageHeight: 106,
+        imageWidth: 126,
+        imageTopPadding: 22,
+      ),
+    );
+  }
+}
+
+class NoFavoritesWidget extends StatelessWidget {
+      @override
+  Widget build(BuildContext context) {
+        final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    return Stack(
+      children: [InfoWithButton(
+        title: "No favorites yet",
+        subtitle: "Search and add",
+        buttonText: "Search",
+        assetImage: SuperheroesImages.ironman,
+        imageHeight: 119,
+        imageWidth: 108,
+        imageTopPadding: 9,
+      ),
+        Padding(
+        padding: const EdgeInsets.only(bottom: 24),
+        child: Align(
+            alignment: Alignment.bottomCenter,
+            child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
+      )
+      ]
+    );
+  }
+}
+
+class NothingFoundWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: InfoWithButton(
+          title: "Nothing found",
+          subtitle: "Search for something else",
+          buttonText: "Search",
+          assetImage: SuperheroesImages.hulk,
+          imageHeight: 112,
+          imageWidth: 84,
+          imageTopPadding: 16,
+        ),
     );
   }
 }
