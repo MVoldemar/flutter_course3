@@ -81,7 +81,17 @@ class MainBloc {
  void updateText(final String? text) {
      currentTextSubject.add(text ?? "");
   }
-
+  void removeFavorite(){
+    print("Remove");
+    if(favoriteSuperheroesSubject.value.length == 0){
+      favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
+    }
+    else {
+      List<SuperheroInfo> newList = List<SuperheroInfo>.from(favoriteSuperheroesSubject.value);
+      newList.removeLast();
+      favoriteSuperheroesSubject.add(newList);
+      }
+  }
   void dispose() {
     stateSubject.close();
     favoriteSuperheroesSubject.close();
@@ -129,6 +139,9 @@ class SuperheroInfo {
 
   @override
   int get hashCode => name.hashCode ^ realName.hashCode ^ imageUrl.hashCode;
+
+  static const List<SuperheroInfo> mocked1 = [];
+
 
   static const mocked = [
     SuperheroInfo(

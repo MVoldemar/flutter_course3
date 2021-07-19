@@ -6,6 +6,7 @@ import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
+import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
@@ -82,7 +83,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: true);
     return TextField(
-      onSubmitted: (String s) {
+          onSubmitted: (String s) {
           print("EditingComplete $s");
           setState(() {
           });
@@ -150,27 +151,37 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.loading:
             return LoadingIndicator();
           case MainPageState.noFavorites:
-            return InfoWithButton(
-              title: "No favorites yet",
-              subtitle: "Search and add",
-              buttonText: "Search",
-              assetImage: SuperheroesImages.ironman,
-              imageHeight: 119,
-              imageWidth: 108,
-              imageTopPadding: 9,
+            return Stack(
+              children: [InfoWithButton(
+                title: "No favorites yet",
+                subtitle: "Search and add",
+                buttonText: "Search",
+                assetImage: SuperheroesImages.ironman,
+                imageHeight: 119,
+                imageWidth: 108,
+                imageTopPadding: 9,
+              ),
+                Padding(
+                padding: const EdgeInsets.only(bottom: 24),
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
+              )
+              ]
             );
           case MainPageState.minSymbols:
             return MinSymbolsWidget();
           case MainPageState.nothingFound:
             return InfoWithButton(
-              title: "Nothing found",
-              subtitle: "Search for something else",
-              buttonText: "Search",
-              assetImage: SuperheroesImages.hulk,
-              imageHeight: 112,
-              imageWidth: 84,
-              imageTopPadding: 16,
-            );
+                title: "Nothing found",
+                subtitle: "Search for something else",
+                buttonText: "Search",
+                assetImage: SuperheroesImages.hulk,
+                imageHeight: 112,
+                imageWidth: 84,
+                imageTopPadding: 16,
+              );
+
           case MainPageState.loadingError:
             return InfoWithButton(
               title: "Error happened",
@@ -188,9 +199,18 @@ class MainPageStateWidget extends StatelessWidget {
               stream: bloc.observedSearchedSuperheroes(),
             );
           case MainPageState.favorites:
-            return SuperheroesList(
-              title: "Your favorites",
-              stream: bloc.observeFavoriteSuperheroes(),
+            return Stack(
+              children: [SuperheroesList(
+                title: "Your favorites",
+                stream: bloc.observeFavoriteSuperheroes(),
+              ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                      child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
+                ),
+              ]
             );
           default:
             return Center(
@@ -216,6 +236,7 @@ class SuperheroesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: true);
     return StreamBuilder<List<SuperheroInfo>>(
         stream: stream,
         builder: (context, snapshot) {
@@ -228,7 +249,7 @@ class SuperheroesList extends StatelessWidget {
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemCount: superheroes.length + 1,
             itemBuilder: (
-              BuildContext context, int index){
+                BuildContext context, int index){
               if (index == 0) {
                 return Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16, top: 90, bottom: 12,),
@@ -257,9 +278,9 @@ class SuperheroesList extends StatelessWidget {
                 ),
               );
             }, separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(height: 8,);
+            return SizedBox(height: 8,);
           },
-                      );
+          );
         });
   }
 }
