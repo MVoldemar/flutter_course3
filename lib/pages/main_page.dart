@@ -73,21 +73,20 @@ class _SearchWidgetState extends State<SearchWidget> {
     super.initState();
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-      controller.addListener(() {
-        bloc.updateText(controller.text);
-       });
+      controller.addListener(() =>
+        bloc.updateText(controller.text));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = Provider.of<MainBloc>(context, listen: true);
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return TextField(
-          onSubmitted: (String s) {
-          print("EditingComplete $s");
-          setState(() {
-          });
-          },
+          // onSubmitted: (String s) {
+          // print("EditingComplete $s");
+          // setState(() {
+          // });
+          // },
       textInputAction: TextInputAction.search,
       textCapitalization: TextCapitalization.words,
       cursorWidth: 2,
@@ -142,7 +141,7 @@ class MainPageStateWidget extends StatelessWidget {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return StreamBuilder<MainPageState>(
       stream: bloc.observeMainPageState(),
-      builder: (BuildContext context, snapshot) {
+      builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data == null) {
           return SizedBox();
         }
@@ -236,7 +235,6 @@ class SuperheroesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = Provider.of<MainBloc>(context, listen: true);
     return StreamBuilder<List<SuperheroInfo>>(
         stream: stream,
         builder: (context, snapshot) {
@@ -278,7 +276,7 @@ class SuperheroesList extends StatelessWidget {
                 ),
               );
             }, separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(height: 8,);
+            return const SizedBox(height: 8,);
           },
           );
         });

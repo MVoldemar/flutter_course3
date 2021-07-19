@@ -5,7 +5,8 @@ import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 
 class SuperheroCard extends StatelessWidget {
-  final SuperheroInfo superheroInfo;
+  final SuperheroInfo
+  superheroInfo;
   final VoidCallback onTap;
 
 
