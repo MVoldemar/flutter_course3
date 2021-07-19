@@ -14,7 +14,9 @@ class MainBloc {
   StreamSubscription? searchSubscribtion;
 
   MainBloc() {
-    Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
+    stateSubject.add(MainPageState.noFavorites);
+
+    textSubscribtion =  Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
       currentTextSubject.distinct().debounceTime(Duration(microseconds: 500)),
       favoriteSuperheroesSubject,
       (searchedText, favorites) => MainPageStateInfo(searchedText, favorites.isNotEmpty),
