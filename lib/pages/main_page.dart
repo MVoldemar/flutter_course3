@@ -73,8 +73,11 @@ class _SearchWidgetState extends State<SearchWidget> {
     super.initState();
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-      controller.addListener(() =>
-        bloc.updateText(controller.text));
+      controller.addListener(() {
+        bloc.updateText(controller.text);
+      setState(() {
+
+      });});
     });
   }
 
@@ -82,11 +85,11 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return TextField(
-          onSubmitted: (String s) {
-          print("EditingComplete $s");
-          setState(() {
-          });
-          },
+          // onSubmitted: (String s) {
+          // print("EditingComplete $s");
+          // setState(() {
+          // });
+          // },
       textInputAction: TextInputAction.search,
       textCapitalization: TextCapitalization.words,
       cursorWidth: 2,
