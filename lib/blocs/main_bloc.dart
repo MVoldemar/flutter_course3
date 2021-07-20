@@ -7,6 +7,7 @@ class MainBloc {
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
   final favoriteSuperheroesSubject =
       BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
+
   final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();// проверить
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
@@ -17,7 +18,7 @@ class MainBloc {
     stateSubject.add(MainPageState.noFavorites);
 
     textSubscribtion =  Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
-      currentTextSubject.distinct().debounceTime(Duration(microseconds: 500)),
+      currentTextSubject.distinct().debounceTime(Duration(milliseconds: 500)),
       favoriteSuperheroesSubject,
       (searchedText, favorites) => MainPageStateInfo(searchedText, favorites.isNotEmpty),
     ).listen((value) {
@@ -27,18 +28,17 @@ class MainBloc {
         if(value.haveFavorites){
           stateSubject.add(MainPageState.favorites);
         }
-        else{
+        else {
           stateSubject.add(MainPageState.noFavorites);
         }
-        stateSubject.add(MainPageState.favorites);
       } else if (value.searchText.length < minSymbols) {
         stateSubject.add(MainPageState.minSymbols);
       } else {
-        searchForSuperHeroes(value.searchText);
+        searchForSuperheroes(value.searchText);
       }
     });
   }
-  void searchForSuperHeroes(final String text) {
+  void searchForSuperheroes(final String text) {
     stateSubject.add(MainPageState.loading);
     searchSubscribtion = search(text).asStream().listen(
       (searchResults) {
@@ -59,6 +59,7 @@ class MainBloc {
       favoriteSuperheroesSubject;
   Stream<List<SuperheroInfo>> observedSearchedSuperheroes() =>
       searchedSuperheroesSubject;
+  Stream<String> observedCurrentTextSubject() => currentTextSubject;
 
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
@@ -72,6 +73,7 @@ class MainBloc {
   }
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
+
   void nextState() {
     final currentState = stateSubject.value;
     final nextState = MainPageState.values[
