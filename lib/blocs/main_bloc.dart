@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:rxdart/rxdart.dart';
 
 class MainBloc {
   static const minSymbols = 3;
+  bool changedText = false;
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
   final favoriteSuperheroesSubject =
       BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
@@ -23,6 +23,8 @@ class MainBloc {
       (searchedText, favorites) => MainPageStateInfo(searchedText, favorites.isNotEmpty),
     ).listen((value) {
       print("CHANGED $value");
+
+
       searchSubscribtion?.cancel();
       if (value.searchText.isEmpty) {
         if(value.haveFavorites){
@@ -31,6 +33,7 @@ class MainBloc {
         else {
           stateSubject.add(MainPageState.noFavorites);
         }
+        changedText = false;
       } else if (value.searchText.length < minSymbols) {
         stateSubject.add(MainPageState.minSymbols);
       } else {
@@ -83,7 +86,16 @@ class MainBloc {
   }
 
  void updateText(final String? text) {
+    var previousTextSubject = currentTextSubject.value;
      currentTextSubject.add(text ?? "");
+     var nextTextSubject = currentTextSubject.value;
+     if(previousTextSubject.length != nextTextSubject.length
+         && (previousTextSubject == "" || nextTextSubject == "")){
+       changedText = true;
+     }
+     else changedText = false;
+
+
   }
   void removeFavorite(){
     print("Remove");

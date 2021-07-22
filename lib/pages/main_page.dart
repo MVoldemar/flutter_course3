@@ -75,7 +75,10 @@ class _SearchWidgetState extends State<SearchWidget> {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
       controller.addListener(() {
         bloc.updateText(controller.text);
-      setState(() {
+
+        if(bloc.changedText)
+          setState(() {
+            print("Rebuild widget");
 
       });});
     });
