@@ -9,10 +9,12 @@ import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
+import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
+  final http.Client? client;
   MainPage({
-    Key? key,
+    Key? key, this.client,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,13 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final MainBloc bloc = MainBloc();
+  late MainBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = MainBloc(client: widget.client);
+  }
 
   @override
   Widget build(BuildContext context) {

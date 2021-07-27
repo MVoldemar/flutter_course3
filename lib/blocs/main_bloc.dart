@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:http/http.dart' as http;
+import 'package:superheroes/model/superhero.dart';
 
 class MainBloc {
   static const minSymbols = 3;
@@ -8,29 +12,32 @@ class MainBloc {
   final favoriteSuperheroesSubject =
       BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
 
-  final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();// проверить
+  final searchedSuperheroesSubject =
+      BehaviorSubject<List<SuperheroInfo>>(); // проверить
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
   StreamSubscription? textSubscribtion;
   StreamSubscription? searchSubscribtion;
 
-  MainBloc() {
+  http.Client? client;
+
+  MainBloc({this.client}) {
     stateSubject.add(MainPageState.noFavorites);
 
-    textSubscribtion =  Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
+    textSubscribtion =
+        Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
       currentTextSubject.distinct().debounceTime(Duration(milliseconds: 500)),
       favoriteSuperheroesSubject,
-      (searchedText, favorites) => MainPageStateInfo(searchedText, favorites.isNotEmpty),
+      (searchedText, favorites) =>
+          MainPageStateInfo(searchedText, favorites.isNotEmpty),
     ).listen((value) {
       print("CHANGED $value");
 
-
       searchSubscribtion?.cancel();
       if (value.searchText.isEmpty) {
-        if(value.haveFavorites){
+        if (value.haveFavorites) {
           stateSubject.add(MainPageState.favorites);
-        }
-        else {
+        } else {
           stateSubject.add(MainPageState.noFavorites);
         }
         changedText = false;
@@ -65,14 +72,39 @@ class MainBloc {
   Stream<String> observedCurrentTextSubject() => currentTextSubject;
 
   Future<List<SuperheroInfo>> search(final String text) async {
-    await Future.delayed(Duration(seconds: 1));
-    List<SuperheroInfo> searchList = [];
-    for(var item in SuperheroInfo.mocked){
-      if(item.name.toLowerCase().contains(text.toLowerCase())){
-         searchList.add(item);
+    // await Future.delayed(Duration(seconds: 1));
+    final token = dotenv.env["SUPERHERO_TOKEN"];
+    final response = await (client ??=http.Client())
+        .get(Uri.parse("https://superheroapi.com/api/$token/search/$text"));
+    final decoded = json.decode(response.body);
+    print(decoded);
+    if (decoded['response'] == 'success') {
+      final List<dynamic> results = decoded['results'];
+      final List<Superhero> superheroes = results.map((rawSuperhero) =>
+          Superhero.fromJson(rawSuperhero)).toList();
+
+      final List<SuperheroInfo> found = superheroes.map((superhero) {
+        return SuperheroInfo(
+          name: superhero.name,
+          realName: superhero.biography.fullName,
+          imageUrl: superhero.image.url,
+        );
+      }).toList();
+      return found;
+    }
+    else if(decoded['response'] == 'error'){
+      if(decoded['error'] == 'character with given name not found'){
+        return [];
       }
     }
-    return searchList;
+    throw Exception("Unknow error happened");
+    //{
+
+    //     "response": "error",
+    //     "error": "character with given name not found"
+    // }
+
+
   }
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
@@ -85,29 +117,29 @@ class MainBloc {
     stateSubject.add(nextState);
   }
 
- void updateText(final String? text) {
+  void updateText(final String? text) {
     var previousTextSubject = currentTextSubject.value;
-     currentTextSubject.add(text ?? "");
-     var nextTextSubject = currentTextSubject.value;
-     if(previousTextSubject.length != nextTextSubject.length
-         && (previousTextSubject == "" || nextTextSubject == "")){
-       changedText = true;
-     }
-     else changedText = false;
-
-
+    currentTextSubject.add(text ?? "");
+    if (previousTextSubject.length != currentTextSubject.value.length &&
+        (previousTextSubject == "" || currentTextSubject.value == "")) {
+      changedText = true;
+    } else
+      changedText = false;
   }
-  void removeFavorite(){
+
+  void removeFavorite() {
     print("Remove");
-    if(favoriteSuperheroesSubject.value.length == 0 || !favoriteSuperheroesSubject.hasValue){
+    if (favoriteSuperheroesSubject.value.length == 0 ||
+        !favoriteSuperheroesSubject.hasValue) {
       favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
-    }
-    else {
-      List<SuperheroInfo> newList = List<SuperheroInfo>.from(favoriteSuperheroesSubject.value);
+    } else {
+      List<SuperheroInfo> newList =
+          List<SuperheroInfo>.from(favoriteSuperheroesSubject.value);
       newList.removeLast();
       favoriteSuperheroesSubject.add(newList);
-      }
+    }
   }
+
   void dispose() {
     stateSubject.close();
     favoriteSuperheroesSubject.close();
@@ -115,6 +147,7 @@ class MainBloc {
     currentTextSubject.close();
 
     textSubscribtion?.cancel();
+    client?.close();
   }
 }
 
@@ -157,7 +190,6 @@ class SuperheroInfo {
   int get hashCode => name.hashCode ^ realName.hashCode ^ imageUrl.hashCode;
 
   static const List<SuperheroInfo> mocked1 = [];
-
 
   static const mocked = [
     SuperheroInfo(
