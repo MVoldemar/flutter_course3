@@ -119,6 +119,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         bloc.updateText(controller.text);
 
         if(bloc.changedText)
+
           setState(() {
             print("Rebuild widget");
 
@@ -255,24 +256,33 @@ class MainPageStateWidget extends StatelessWidget {
   }
 }
 
-class LoadingErrorWidget extends StatelessWidget {
+class LoadingErrorWidget extends StatefulWidget {
 
   const LoadingErrorWidget({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return InfoWithButton(
-      title: "Error happened",
-      subtitle: "Please, try again",
-      buttonText: "Retry",
-      assetImage: SuperheroesImages.supernman,
-      imageHeight: 106,
-      imageWidth: 126,
-      imageTopPadding: 22, onTap: () {
+  _LoadingErrorWidgetState createState() => _LoadingErrorWidgetState();
+}
 
-    },
+class _LoadingErrorWidgetState extends State<LoadingErrorWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    return Center(
+      child: InfoWithButton(
+        title: "Error happened",
+        subtitle: "Please, try again",
+        buttonText: "Retry",
+        assetImage: SuperheroesImages.supernman,
+        imageHeight: 106,
+        imageWidth: 126,
+        imageTopPadding: 22, onTap: ()
+      {
+          bloc.retry();
+      },
+      ),
     );
   }
 }
@@ -330,6 +340,7 @@ class _NothingFoundWidgetState extends State<NothingFoundWidget> {
           imageWidth: 84,
           imageTopPadding: 16,
           onTap: () {
+
             print("Tap search");
                          widget.focusNode.requestFocus();
             },

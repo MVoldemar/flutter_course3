@@ -123,6 +123,13 @@ class MainBloc {
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
 
+  void retry() async{
+    search(currentTextSubject.value);
+    print("RETRY: ${currentTextSubject.value}");
+    searchForSuperheroes(currentTextSubject.value);
+  }
+
+
   void nextState() {
     final currentState = stateSubject.value;
     final nextState = MainPageState.values[
