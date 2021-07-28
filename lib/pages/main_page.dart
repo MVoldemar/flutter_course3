@@ -24,13 +24,11 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late MainBloc bloc;
-
-    @override
+   @override
   void initState() {
     super.initState();
     bloc = MainBloc(client: widget.client);
-
-      }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -52,20 +50,50 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class MainPageContent extends StatelessWidget {
+class MainPageContent extends StatefulWidget {
+  @override
+  _MainPageContentState createState() => _MainPageContentState();
+}
+
+
+
+class _MainPageContentState extends State<MainPageContent> {
+  late final FocusNode myFocusNode;
 
   @override
+  void initState() {
+    super.initState();
+    myFocusNode = FocusNode();
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      myFocusNode.addListener(() {
+        setState(() {
+          print("ChangeState in Focus node");
+
+        });
+      });
+
+    });
+
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    super.dispose();
+  }
+
+    @override
   Widget build(BuildContext context) {
-    return Stack(
+          return Stack(
       children: [
-        MainPageStateWidget(),
+        MainPageStateWidget(focusNode: myFocusNode),
         Padding(
           padding: const EdgeInsets.only(
             left: 16,
             right: 16,
             top: 12,
           ),
-          child: SearchWidget(),
+          child: SearchWidget(focusNode: myFocusNode),
         ),
       ],
     );
@@ -73,21 +101,18 @@ class MainPageContent extends StatelessWidget {
 }
 
 class SearchWidget extends StatefulWidget {
-  SearchWidget({
-  Key? key,
-  }) : super(key: key);
+  final FocusNode focusNode;
+  const SearchWidget({Key? key, required this.focusNode}) : super(key: key);
   @override
   _SearchWidgetState createState() => _SearchWidgetState();
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
-  late FocusNode myFocusNode;
   final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    myFocusNode = FocusNode();
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
       controller.addListener(() {
@@ -104,9 +129,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      //
-      //
-      // focusNode: myFocusNode,
+      focusNode: widget.focusNode,
       textInputAction: TextInputAction.search,
       textCapitalization: TextCapitalization.words,
       cursorWidth: 2,
@@ -134,7 +157,8 @@ class _SearchWidgetState extends State<SearchWidget> {
               child: Icon(
                 Icons.clear,
                 color: Colors.white,
-              )),
+              )
+          ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.white, width: 2,)
@@ -157,13 +181,16 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
   @override
   void dispose() {
-    myFocusNode.dispose();
+   // _myFocusNode.dispose();
     super.dispose();
 
   }
 }
 
 class MainPageStateWidget extends StatelessWidget {
+  final FocusNode focusNode;
+
+  MainPageStateWidget({Key? key, required this.focusNode}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
@@ -181,7 +208,7 @@ class MainPageStateWidget extends StatelessWidget {
             return MinSymbolsWidget();
           case MainPageState.noFavorites:
             return Stack(children: [
-              NoFavoritesWidget(),
+              NoFavoritesWidget(focusNode: focusNode),
               Padding(
                 padding: const EdgeInsets.only(bottom: 24),
                 child: Align(
@@ -213,7 +240,7 @@ class MainPageStateWidget extends StatelessWidget {
               stream: bloc.observedSearchedSuperheroes(),
             );
           case MainPageState.nothingFound:
-            return NothingFoundWidget();
+            return NothingFoundWidget(focusNode: focusNode);
           case MainPageState.loadingError:
             return LoadingErrorWidget();
           default:
@@ -229,6 +256,7 @@ class MainPageStateWidget extends StatelessWidget {
 }
 
 class LoadingErrorWidget extends StatelessWidget {
+
   const LoadingErrorWidget({
     Key? key,
   }) : super(key: key);
@@ -249,7 +277,16 @@ class LoadingErrorWidget extends StatelessWidget {
   }
 }
 
-class NoFavoritesWidget extends StatelessWidget {
+class NoFavoritesWidget extends StatefulWidget {
+  final FocusNode focusNode;
+
+  const NoFavoritesWidget({Key? key, required this.focusNode}) : super(key: key);
+
+  @override
+  _NoFavoritesWidgetState createState() => _NoFavoritesWidgetState();
+}
+
+class _NoFavoritesWidgetState extends State<NoFavoritesWidget> {
       @override
   Widget build(BuildContext context) {
     return Center(
@@ -260,19 +297,27 @@ class NoFavoritesWidget extends StatelessWidget {
         assetImage: SuperheroesImages.ironman,
         imageHeight: 119,
         imageWidth: 108,
-        imageTopPadding: 9, onTap: () {
-          focusNodeChange(FocusNode);
-      },
+        imageTopPadding: 9,
+
+        onTap: () {
+            print("Tap search");
+            widget.focusNode.requestFocus();
+            },
       ),
     );
   }
-
-  void focusNodeChange(focusNode) {
-
-  }
 }
 
-class NothingFoundWidget extends StatelessWidget {
+class NothingFoundWidget extends StatefulWidget {
+  final FocusNode focusNode;
+
+  const NothingFoundWidget({Key? key, required this.focusNode}) : super(key: key);
+
+  @override
+  _NothingFoundWidgetState createState() => _NothingFoundWidgetState();
+}
+
+class _NothingFoundWidgetState extends State<NothingFoundWidget> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -285,8 +330,9 @@ class NothingFoundWidget extends StatelessWidget {
           imageWidth: 84,
           imageTopPadding: 16,
           onTap: () {
-
-      },
+            print("Tap search");
+                         widget.focusNode.requestFocus();
+            },
         ),
     );
   }
@@ -335,6 +381,7 @@ class SuperheroesList extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SuperheroCard(
                   superheroInfo: item,
+
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

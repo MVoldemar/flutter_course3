@@ -81,9 +81,7 @@ class InfoWithButton extends StatelessWidget {
             ),
             ActionButton(
               text: buttonText,
-              onTap: () {
-
-              },
+              onTap: onTap,
             ),
           ],
         ),
