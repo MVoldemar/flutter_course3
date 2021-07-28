@@ -12,6 +12,7 @@ import 'package:superheroes/widgets/superhero_card.dart';
 import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
+
   final http.Client? client;
   MainPage({
     Key? key, this.client,
@@ -24,11 +25,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late MainBloc bloc;
 
-  @override
+    @override
   void initState() {
     super.initState();
     bloc = MainBloc(client: widget.client);
-  }
+
+      }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class _MainPageState extends State<MainPage> {
 }
 
 class MainPageContent extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -70,15 +73,21 @@ class MainPageContent extends StatelessWidget {
 }
 
 class SearchWidget extends StatefulWidget {
+  SearchWidget({
+  Key? key,
+  }) : super(key: key);
   @override
   _SearchWidgetState createState() => _SearchWidgetState();
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
+  late FocusNode myFocusNode;
   final TextEditingController controller = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    myFocusNode = FocusNode();
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
       controller.addListener(() {
@@ -94,13 +103,10 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return TextField(
-          // onSubmitted: (String s) {
-          // print("EditingComplete $s");
-          // setState(() {
-          // });
-          // },
+      //
+      //
+      // focusNode: myFocusNode,
       textInputAction: TextInputAction.search,
       textCapitalization: TextCapitalization.words,
       cursorWidth: 2,
@@ -148,6 +154,12 @@ class _SearchWidgetState extends State<SearchWidget> {
 
       ),
     );
+  }
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    super.dispose();
+
   }
 }
 
@@ -230,7 +242,9 @@ class LoadingErrorWidget extends StatelessWidget {
       assetImage: SuperheroesImages.supernman,
       imageHeight: 106,
       imageWidth: 126,
-      imageTopPadding: 22,
+      imageTopPadding: 22, onTap: () {
+
+    },
     );
   }
 }
@@ -238,7 +252,6 @@ class LoadingErrorWidget extends StatelessWidget {
 class NoFavoritesWidget extends StatelessWidget {
       @override
   Widget build(BuildContext context) {
-        final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return Center(
       child: InfoWithButton(
         title: "No favorites yet",
@@ -247,16 +260,15 @@ class NoFavoritesWidget extends StatelessWidget {
         assetImage: SuperheroesImages.ironman,
         imageHeight: 119,
         imageWidth: 108,
-        imageTopPadding: 9,
+        imageTopPadding: 9, onTap: () {
+          focusNodeChange(FocusNode);
+      },
       ),
-      //   Padding(
-      //   padding: const EdgeInsets.only(bottom: 24),
-      //   child: Align(
-      //       alignment: Alignment.bottomCenter,
-      //       child: ActionButton(text: "Remove", onTap: () => bloc.removeFavorite())),
-      // )
-
     );
+  }
+
+  void focusNodeChange(focusNode) {
+
   }
 }
 
@@ -272,6 +284,9 @@ class NothingFoundWidget extends StatelessWidget {
           imageHeight: 112,
           imageWidth: 84,
           imageTopPadding: 16,
+          onTap: () {
+
+      },
         ),
     );
   }

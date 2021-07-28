@@ -42,13 +42,15 @@ class SuperheroCard extends StatelessWidget {
                   imageUrl: superheroInfo.imageUrl,
                   fit: BoxFit.cover,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            value: downloadProgress.progress ?? null,
-                            color: SuperheroesColors.blue,
-                          )),
+                      Center(
+                        child: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              value: downloadProgress.progress ?? null,
+                              color: SuperheroesColors.blue,
+                            )),
+                      ),
                   errorWidget: (context, url, error) => Center(
                       child: Image(
                     image: AssetImage(SuperheroesImages.unknown),

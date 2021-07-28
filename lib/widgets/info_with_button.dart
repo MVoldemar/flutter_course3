@@ -6,6 +6,7 @@ import 'package:superheroes/resources/superheroes_images.dart';
 import 'action_button.dart';
 
 class InfoWithButton extends StatelessWidget {
+  final VoidCallback onTap;
   final String title;
   final String subtitle;
   final String buttonText;
@@ -21,7 +22,8 @@ class InfoWithButton extends StatelessWidget {
       required this.assetImage,
       required this.imageHeight,
       required this.imageWidth,
-      required this.imageTopPadding})
+      required this.imageTopPadding,
+      required this.onTap})
       : super(key: key);
 
   @override
@@ -79,7 +81,9 @@ class InfoWithButton extends StatelessWidget {
             ),
             ActionButton(
               text: buttonText,
-              onTap: () {},
+              onTap: () {
+
+              },
             ),
           ],
         ),
