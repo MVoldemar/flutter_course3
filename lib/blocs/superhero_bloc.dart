@@ -132,7 +132,7 @@ class SuperheroBloc {
 
 
 
-  Stream<Superhero> observeSuperhero() => superheroSubject.distinct();
+  Stream<Superhero> observeSuperhero() => superheroSubject;
 
   void dispose() {
     client?.close();
