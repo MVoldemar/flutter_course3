@@ -18,7 +18,13 @@ class Superhero {
   final Biography biography;
   final ServerImage image;
 
-  Superhero(this.name, this.biography, this.image, this.powerstats, this.id);
+
+  @override
+  String toString() {
+    return 'Superhero{powerstats: $powerstats, id: $id, name: $name, biography: $biography, image: $image}';
+  }
+
+  Superhero({required this.id, required this.name, required this.biography, required this.image, required this.powerstats,}) ;
 
   factory Superhero.fromJson(final Map<String, dynamic> json) => _$SuperheroFromJson(json);
   Map<String, dynamic> toJson() => _$SuperheroToJson(this);

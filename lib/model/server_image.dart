@@ -8,6 +8,15 @@ part 'server_image.g.dart';
 class ServerImage{
 final String url;
 
+@override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ServerImage &&
+          url == other.url;
+
+  @override
+  int get hashCode => url.hashCode;
+
   ServerImage(this.url);
 
 

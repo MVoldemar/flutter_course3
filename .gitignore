@@ -1,5 +1,7 @@
 # Miscellaneous
 *.env
+**/failures/*.png
+
 *.class
 *.log
 *.pyc
