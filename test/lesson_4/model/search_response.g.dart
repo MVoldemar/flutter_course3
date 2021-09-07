@@ -20,5 +20,5 @@ Map<String, dynamic> _$SearchResponseToJson(SearchResponse instance) =>
     <String, dynamic>{
       'result': instance.result,
       'error': instance.error,
-      'results': instance.results,
+      'results': instance.results?.map((e) => e.toJson()).toList(),
     };

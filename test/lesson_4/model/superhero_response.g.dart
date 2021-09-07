@@ -30,7 +30,7 @@ Map<String, dynamic> _$SuperheroResponseToJson(SuperheroResponse instance) =>
       'error': instance.error,
       'id': instance.id,
       'name': instance.name,
-      'biography': instance.biography,
-      'image': instance.image,
-      'powerstats': instance.powerstats,
+      'biography': instance.biography?.toJson(),
+      'image': instance.image?.toJson(),
+      'powerstats': instance.powerstats?.toJson(),
     };
