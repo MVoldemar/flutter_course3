@@ -385,42 +385,38 @@ class ListTile extends StatelessWidget {
               key: ValueKey(superhero.id),
               child: SuperHeroCardInTile(superhero: superhero),
               secondaryBackground: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 height: 70,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: SuperheroesColors.red,
                 ),
                 alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Text(
-                    "Remove\nfrom\nfavorites".toUpperCase(),
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
+                child: Text(
+                  "Remove\nfrom\nfavorites".toUpperCase(),
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               background: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 height: 70,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: SuperheroesColors.red,
                 ),
                 alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    "Remove\nfrom\nfavorites".toUpperCase(),
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
+                child: Text(
+                  "Remove\nfrom\nfavorites".toUpperCase(),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),

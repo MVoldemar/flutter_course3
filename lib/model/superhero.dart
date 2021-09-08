@@ -7,7 +7,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'superhero.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.kebab, explicitToJson: true)
+@JsonSerializable()
 
 
 
