@@ -384,47 +384,42 @@ class ListTile extends StatelessWidget {
           ? Dismissible(
               key: ValueKey(superhero.id),
               child: SuperHeroCardInTile(superhero: superhero),
-              secondaryBackground: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: SuperheroesColors.red,
-                ),
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "Remove\nfrom\nfavorites".toUpperCase(),
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              background: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: SuperheroesColors.red,
-                ),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Remove\nfrom\nfavorites".toUpperCase(),
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
+              secondaryBackground: BackgroundCard(isLeft: false,),
+              background: BackgroundCard(isLeft: true,),
               onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
             )
           : SuperHeroCardInTile(
               superhero: superhero,
             ),
+    );
+  }
+}
+
+class BackgroundCard extends StatelessWidget {
+  final bool isLeft;
+  const BackgroundCard({
+    Key? key, required this.isLeft,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      height: 70,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: SuperheroesColors.red,
+      ),
+      alignment: isLeft ? Alignment.centerLeft: Alignment.centerRight,
+      child: Text(
+        "Remove\nfrom\nfavorites".toUpperCase(),
+        textAlign: isLeft? TextAlign.left : TextAlign.right,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     );
   }
 }

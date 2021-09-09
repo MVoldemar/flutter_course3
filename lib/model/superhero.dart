@@ -24,6 +24,25 @@ class Superhero {
     return 'Superhero{powerstats: $powerstats, id: $id, name: $name, biography: $biography, image: $image}';
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Superhero &&
+          runtimeType == other.runtimeType &&
+          powerstats == other.powerstats &&
+          id == other.id &&
+          name == other.name &&
+          biography == other.biography &&
+          image == other.image;
+
+  @override
+  int get hashCode =>
+      powerstats.hashCode ^
+      id.hashCode ^
+      name.hashCode ^
+      biography.hashCode ^
+      image.hashCode;
+
   Superhero({required this.id, required this.name, required this.biography, required this.image, required this.powerstats,}) ;
 
   factory Superhero.fromJson(final Map<String, dynamic> json) => _$SuperheroFromJson(json);

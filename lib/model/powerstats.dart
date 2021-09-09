@@ -30,17 +30,43 @@ class Powerstats {
           combat != "null";
 
   double get intelligencePercent => convertStringToPercent(intelligence);
-  double get stregthPercent => convertStringToPercent(strength);
-  double get speePercent => convertStringToPercent(speed);
-  double get durailityPercent => convertStringToPercent(durability);
-  double get powePercent => convertStringToPercent(power);
-  double get combtPercent => convertStringToPercent(combat);
+  double get strengthPercent => convertStringToPercent(strength);
+  double get speedPercent => convertStringToPercent(speed);
+  double get durabilityPercent => convertStringToPercent(durability);
+  double get powerPercent => convertStringToPercent(power);
+  double get combatPercent => convertStringToPercent(combat);
 
   double convertStringToPercent(final String value){
     final intValue = int.tryParse(value);
     if(intValue == null) return 0;
     return intValue/100;
   }
+
+  @override
+  String toString() {
+    return 'Powerstats{intelligence: $intelligence, strength: $strength, speed: $speed, durability: $durability, power: $power, combat: $combat}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Powerstats &&
+          runtimeType == other.runtimeType &&
+          intelligence == other.intelligence &&
+          strength == other.strength &&
+          speed == other.speed &&
+          durability == other.durability &&
+          power == other.power &&
+          combat == other.combat;
+
+  @override
+  int get hashCode =>
+      intelligence.hashCode ^
+      strength.hashCode ^
+      speed.hashCode ^
+      durability.hashCode ^
+      power.hashCode ^
+      combat.hashCode;
 
   factory Powerstats.fromJson(final Map<String, dynamic> json) =>
       _$PowerstatsFromJson(json);

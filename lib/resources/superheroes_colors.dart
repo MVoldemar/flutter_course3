@@ -11,6 +11,6 @@ class SuperheroesColors{
   static const red = Color(0xFF961B1B);
   static const grey = Color(0xFF727272);
   static const green = Color(0xFF2AAB6A);
-  static const grey_bio = Color(0xFF999999);
+  static const greyBio = Color(0xFF999999);
 
 }

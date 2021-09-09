@@ -77,15 +77,15 @@ class SuperheroBloc {
     requestSubscription?.cancel();
     requestSubscription = request(superheroStorage).asStream( ).listen(
           (superhero) {
-            if(superheroStorage != null && superheroStorage.toString()
-                == superhero.toString()) {
-              return;
-            }
-            if(superheroStorage == null) {
-              print(superheroStorage == superhero);
+            // if(superheroStorage != null && superheroStorage.toString()
+            //     == superhero.toString()) {
+            //   return;
+            // }
+            // if(superheroStorage == null) {
+            //   print(superheroStorage == superhero);
               superheroSubject.add(superhero);
-              print("У нас нет модели в избранном");
-            }
+            //   print("У нас нет модели в избранном");
+            // }
 
       },
       onError: (error, stackTrace) {
@@ -115,7 +115,7 @@ class SuperheroBloc {
     }
     final decoded = json.decode(response.body);
     if (decoded['response'] == 'success') {
-      if(superheroStorage != null && superheroStorage.toString() != Superhero.fromJson(decoded).toString()) {
+      if(superheroStorage != null && superheroStorage != Superhero.fromJson(decoded)) {
         FavoriteSuperheroesStorage.getInstance().replaceToFavorites(Superhero.fromJson(decoded));
             print("Id совпадают");
         }
@@ -132,7 +132,7 @@ class SuperheroBloc {
 
 
 
-  Stream<Superhero> observeSuperhero() => superheroSubject;
+  Stream<Superhero> observeSuperhero() => superheroSubject.distinct();
 
   void dispose() {
     client?.close();

@@ -80,6 +80,7 @@ class SuperheroContentPage extends StatelessWidget {
                   if (superhero.powerstats.isNotNull())
                     PowerstatsWidget(powerstats: superhero.powerstats),
                   BiographyWidget(biography: superhero.biography),
+                  const SizedBox(height: 30,),
                 ],
               ),
             )
@@ -128,14 +129,14 @@ class PowerstatsWidget extends StatelessWidget {
             Expanded(
                 child: Center(
               child: PowerstatWidget(
-                value: powerstats.stregthPercent,
+                value: powerstats.strengthPercent,
                 name: "Strength",
               ),
             )),
             Expanded(
                 child: Center(
               child: PowerstatWidget(
-                value: powerstats.speePercent,
+                value: powerstats.speedPercent,
                 name: "Speed",
               ),
             )),
@@ -155,21 +156,21 @@ class PowerstatsWidget extends StatelessWidget {
             Expanded(
                 child: Center(
               child: PowerstatWidget(
-                value: powerstats.durailityPercent,
+                value: powerstats.durabilityPercent,
                 name: "Durability",
               ),
             )),
             Expanded(
                 child: Center(
               child: PowerstatWidget(
-                value: powerstats.powePercent,
+                value: powerstats.powerPercent,
                 name: "Power",
               ),
             )),
             Expanded(
                 child: Center(
               child: PowerstatWidget(
-                value: powerstats.combtPercent,
+                value: powerstats.combatPercent,
                 name: "Combat",
               ),
             )),
@@ -307,7 +308,7 @@ class BiographyWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "bio".toUpperCase(),
+              "Bio".toUpperCase(),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
@@ -319,11 +320,11 @@ class BiographyWidget extends StatelessWidget {
               height: 8,
             ),
             Text(
-              "Full name".toUpperCase(),
+              "Full Name".toUpperCase(),
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: SuperheroesColors.grey_bio,
+                color: SuperheroesColors.greyBio,
               ),
             ),
             const SizedBox(
@@ -345,7 +346,7 @@ class BiographyWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: SuperheroesColors.grey_bio,
+                color: SuperheroesColors.greyBio,
               ),
             ),
             Text(
@@ -364,7 +365,7 @@ class BiographyWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: SuperheroesColors.grey_bio,
+                color: SuperheroesColors.greyBio,
               ),
             ),
             Text(
@@ -379,7 +380,9 @@ class BiographyWidget extends StatelessWidget {
         ),
         // child:
       ),
-      Align(
+
+      if(biography.alignmentInfo != null )
+        Align(
         alignment: Alignment.topRight,
         child: Container(
           alignment: Alignment.center,
@@ -402,10 +405,8 @@ class BiographyWidget extends StatelessWidget {
           width: 24,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20),
-              topLeft: Radius.zero,
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.zero,
+              topRight: Radius.circular(16),
+              bottomLeft: Radius.circular(16),
             ),
             color: biography.alignmentInfo!.color,
           ),
@@ -446,16 +447,13 @@ class SuperheroAppBar extends StatelessWidget {
         centerTitle: true,
         background: CachedNetworkImage(
           placeholder: (context, error) =>
-              Container(color: SuperheroesColors.indigo),
+              ColoredBox(color: SuperheroesColors.indigo),
           errorWidget: (context, url, error) => Container(
+            alignment: Alignment.center,
             color: SuperheroesColors.indigo,
-            child: Center(
-                child: Image(
-              image: AssetImage(SuperheroesImages.unknown_big),
+            child: Image.asset(SuperheroesImages.unknown_big,
               width: 85,
-              height: 264,
-              fit: BoxFit.cover,
-            )),
+              height: 264,),
           ),
           imageUrl: superhero.image.url,
           fit: BoxFit.cover,

@@ -19,7 +19,27 @@ class  Biography {
   }
   );
 
-  //
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Biography &&
+          runtimeType == other.runtimeType &&
+          fullName == other.fullName &&
+          alignment == other.alignment &&
+          aliases.toString() == other.aliases.toString() &&
+          placeOfBirth == other.placeOfBirth;
+
+  @override
+  int get hashCode =>
+      fullName.hashCode ^
+      alignment.hashCode ^
+      aliases.hashCode ^
+      placeOfBirth.hashCode;
+
+  @override
+  String toString() {
+    return 'Biography{fullName: $fullName, alignment: $alignment, aliases: $aliases, placeOfBirth: $placeOfBirth}';
+  } //
   factory Biography.fromJson(final Map<String, dynamic> json) =>
       _$BiographyFromJson(json);
   Map<String, dynamic> toJson() => _$BiographyToJson(this);
