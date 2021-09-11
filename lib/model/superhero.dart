@@ -1,3 +1,7 @@
+import 'dart:js';
+
+import 'package:provider/provider.dart';
+import 'package:superheroes/blocs/superhero_bloc.dart';
 import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/server_image.dart';
 
@@ -12,6 +16,7 @@ part 'superhero.g.dart';
 
 
 class Superhero {
+
   final Powerstats powerstats;
   final String id;
   final String name;
@@ -45,9 +50,6 @@ class Superhero {
 
   Superhero({required this.id, required this.name, required this.biography, required this.image, required this.powerstats,}) ;
 
-  void retry(){
-
-  }
 
 
   factory Superhero.fromJson(final Map<String, dynamic> json) => _$SuperheroFromJson(json);

@@ -62,6 +62,13 @@ class SuperheroBloc {
         print("Error happend in addToFavorites: $error, $stackTrace"));
 
   }
+  void retry(){
+      superheroStateSubject.add(SuperheroPageState.loading);
+      requestSuperhero(superheroSubject.valueOrNull);
+
+  }
+
+
 
   void removeFromFavorites(){
     removeFromFavoriteSubscription?.cancel();
@@ -83,10 +90,6 @@ class SuperheroBloc {
     requestSubscription?.cancel();
     requestSubscription = request(superheroStorage).asStream( ).listen(
           (superhero) {
-            //   return;
-            // }
-            // if(superheroStorage == null) {
-            //   print(superheroStorage == superhero);
               superheroSubject.add(superhero);
               superheroStateSubject.add(SuperheroPageState.loaded);
             //   print("У нас нет модели в избранном");
