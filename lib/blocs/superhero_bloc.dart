@@ -21,10 +21,7 @@ class SuperheroBloc {
   StreamSubscription? replaceFromFavoriteSubscription;
 
   SuperheroBloc({this.client, required this.id, }) {
-
-    superheroStateSubject.add(SuperheroPageState.error);
-
-    getFromFavorites();
+        getFromFavorites();
   }
 
 
@@ -96,9 +93,6 @@ class SuperheroBloc {
             // }
       },
       onError: (error, stackTrace) {
-        if(superheroStorage == null) {
-          superheroStateSubject.add(SuperheroPageState.error);
-        }
         print("Error happened in requestSuperhero: $error, $stackTrace");
       },
     );
@@ -117,10 +111,12 @@ class SuperheroBloc {
     print(response.statusCode);
     print("$id");
     if(response.statusCode>=500){
+      pageStateError(superheroStorage);
       throw ApiException("Server error happened");
-    }
+      }
     if(response.statusCode<500&&response.statusCode>=400)
     {
+      pageStateError(superheroStorage);
       throw ApiException("Client error happened");
     }
     final decoded = json.decode(response.body);
@@ -129,16 +125,24 @@ class SuperheroBloc {
         FavoriteSuperheroesStorage.getInstance().replaceToFavorites(Superhero.fromJson(decoded));
             print("Id совпадают");
         }
-
       print(Superhero.fromJson(decoded).name);
+      superheroStateSubject.add(SuperheroPageState.loaded);
       return Superhero.fromJson(decoded);
     }
       else if(decoded['response'] == 'error'){
         print("error");
+        pageStateError(superheroStorage);
         throw ApiException("Client error happened");
       }
+      pageStateError(superheroStorage);
       throw Exception("Unknow error happened");
     }
+
+  void pageStateError(Superhero? superheroStorage) {
+    if(superheroStorage == null) {
+      superheroStateSubject.add(SuperheroPageState.error);
+    }
+  }
 
 
 

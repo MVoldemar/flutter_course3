@@ -45,6 +45,11 @@ class Superhero {
 
   Superhero({required this.id, required this.name, required this.biography, required this.image, required this.powerstats,}) ;
 
+  void retry(){
+
+  }
+
+
   factory Superhero.fromJson(final Map<String, dynamic> json) => _$SuperheroFromJson(json);
   Map<String, dynamic> toJson() => _$SuperheroToJson(this);
 }
