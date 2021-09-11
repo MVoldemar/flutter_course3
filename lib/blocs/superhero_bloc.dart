@@ -10,7 +10,7 @@ import 'package:superheroes/model/superhero.dart';
 class SuperheroBloc {
   http.Client? client;
   final String id;
-
+  final BehaviorSubject<SuperheroPageState> superheroStateSubject = BehaviorSubject();
   final superheroSubject = BehaviorSubject<Superhero>();
 
 
@@ -21,16 +21,25 @@ class SuperheroBloc {
   StreamSubscription? replaceFromFavoriteSubscription;
 
   SuperheroBloc({this.client, required this.id, }) {
+
+    superheroStateSubject.add(SuperheroPageState.error);
+
     getFromFavorites();
   }
+
+
 
   void getFromFavorites() {
     getFromFavoriteSubscription?.cancel();
     getFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
         .getSuperhero(id).asStream().listen((superhero) {
           if(superhero != null) {
+            superheroStateSubject.add(SuperheroPageState.loaded);
             superheroSubject.add(superhero);
             print("У нас есть модель в избранном");
+          }
+          if(superhero == null) {
+            superheroStateSubject.add(SuperheroPageState.loading);
           }
           requestSuperhero(superhero);
         },
@@ -70,25 +79,26 @@ class SuperheroBloc {
 
   }
 
-
+  Stream<SuperheroPageState> observeSuperheroPageState() => superheroStateSubject.distinct();
   Stream<bool> observeIsFavorite() => FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
 
   void requestSuperhero(Superhero? superheroStorage) {
     requestSubscription?.cancel();
     requestSubscription = request(superheroStorage).asStream( ).listen(
           (superhero) {
-            // if(superheroStorage != null && superheroStorage.toString()
-            //     == superhero.toString()) {
             //   return;
             // }
             // if(superheroStorage == null) {
             //   print(superheroStorage == superhero);
               superheroSubject.add(superhero);
+              superheroStateSubject.add(SuperheroPageState.loaded);
             //   print("У нас нет модели в избранном");
             // }
-
       },
       onError: (error, stackTrace) {
+        if(superheroStorage == null) {
+          superheroStateSubject.add(SuperheroPageState.error);
+        }
         print("Error happened in requestSuperhero: $error, $stackTrace");
       },
     );
@@ -141,8 +151,13 @@ class SuperheroBloc {
     addToFavoriteSubscription?.cancel();
     removeFromFavoriteSubscription?.cancel();
     replaceFromFavoriteSubscription?.cancel();
-
+    superheroStateSubject.close();
 
     superheroSubject.close();
   }
+}
+enum SuperheroPageState {
+  loading,
+  loaded,
+  error,
 }

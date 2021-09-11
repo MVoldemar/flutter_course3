@@ -233,6 +233,6 @@ class MainPageStateInfo {
 
   @override
   String toString() {
-    return 'MainPageStateInfo{searchText: $searchText, haveFavorites: $haveFavorites}';
+    return 'MainPfenuageStateInfo{searchText: $searchText, haveFavorites: $haveFavorites}';
   }
 }
