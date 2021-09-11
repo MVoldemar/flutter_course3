@@ -1,7 +1,3 @@
-import 'dart:js';
-
-import 'package:provider/provider.dart';
-import 'package:superheroes/blocs/superhero_bloc.dart';
 import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/server_image.dart';
 
