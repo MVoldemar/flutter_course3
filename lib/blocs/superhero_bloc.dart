@@ -96,6 +96,7 @@ class SuperheroBloc {
             // }
       },
       onError: (error, stackTrace) {
+        pageStateError(superheroStorage);
         print("Error happened in requestSuperhero: $error, $stackTrace");
       },
     );
@@ -142,9 +143,9 @@ class SuperheroBloc {
     }
 
   void pageStateError(Superhero? superheroStorage) {
-    if(superheroStorage == null) {
+     if(superheroStorage == null) {
       superheroStateSubject.add(SuperheroPageState.error);
-    }
+     }
   }
 
 

@@ -12,6 +12,7 @@ import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:superheroes/resources/superheroes_icons.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
+import 'package:superheroes/widgets/info_with_button.dart';
 
 class SuperheroPage extends StatefulWidget {
   final http.Client? client;
@@ -40,10 +41,51 @@ class _SuperheroPageState extends State<SuperheroPage> {
   Widget build(BuildContext context) {
     return Provider.value(
       value: bloc,
-      child: Scaffold(
-        backgroundColor: SuperheroesColors.background,
-        body: SuperheroContentPage(),
-      ),
+      child: StreamBuilder<SuperheroPageState>(
+          stream: bloc.observeSuperheroPageState(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || snapshot.data == null) {
+              return const SizedBox.shrink();
+            }
+            if (snapshot.data == SuperheroPageState.error) {
+              return Scaffold(
+                backgroundColor: SuperheroesColors.background,
+                body: Container(
+                  padding: EdgeInsets.only(top: 60),
+                  alignment: Alignment.topCenter,
+                  child: InfoWithButton(title: "Error happened",
+                    subtitle: "Please, try again",
+                    buttonText: "Retry",
+                    assetImage: SuperheroesImages.supernman,
+                    imageHeight: 106,
+                    imageWidth: 126,
+                    imageTopPadding: 22,
+                    onTap: () {
+                      bloc.retry();
+                    },),
+                ),
+                appBar: AppBar(backgroundColor: SuperheroesColors.background, elevation: 0,),
+              );
+            }
+            if (snapshot.data == SuperheroPageState.loading) {
+              return Scaffold(
+                backgroundColor: SuperheroesColors.background,
+                appBar: AppBar(backgroundColor: SuperheroesColors.background, elevation: 0,),
+                body: Container(
+                  alignment: Alignment.topCenter,
+                  padding: EdgeInsets.only(top: 60),
+                  child: CircularProgressIndicator(
+                    color: SuperheroesColors.blue,
+                    strokeWidth: 4,
+                  ),
+                ),
+              );
+            }
+            return Scaffold(
+              backgroundColor: SuperheroesColors.background,
+              body: SuperheroContentPage(),
+            );
+          }),
     );
   }
 
@@ -80,7 +122,9 @@ class SuperheroContentPage extends StatelessWidget {
                   if (superhero.powerstats.isNotNull())
                     PowerstatsWidget(powerstats: superhero.powerstats),
                   BiographyWidget(biography: superhero.biography),
-                  const SizedBox(height: 30,),
+                  const SizedBox(
+                    height: 30,
+                  ),
                 ],
               ),
             )
@@ -380,38 +424,37 @@ class BiographyWidget extends StatelessWidget {
         ),
         // child:
       ),
-
-      if(biography.alignmentInfo != null )
+      if (biography.alignmentInfo != null)
         Align(
-        alignment: Alignment.topRight,
-        child: Container(
-          alignment: Alignment.center,
-          child: RotatedBox(
-            quarterTurns: 1,
-            child: Text(
-              biography.alignment.toUpperCase(),
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-               color: Colors.white,
+          alignment: Alignment.topRight,
+          child: Container(
+            alignment: Alignment.center,
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: Text(
+                biography.alignment.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-          margin: EdgeInsets.only(
-            left: 16,
-            right: 16,
-          ),
-          height: 70,
-          width: 24,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(16),
-              bottomLeft: Radius.circular(16),
+            margin: EdgeInsets.only(
+              left: 16,
+              right: 16,
             ),
-            color: biography.alignmentInfo!.color,
+            height: 70,
+            width: 24,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+              ),
+              color: biography.alignmentInfo!.color,
+            ),
           ),
-        ),
-      )
+        )
     ]);
   }
 }
@@ -451,9 +494,11 @@ class SuperheroAppBar extends StatelessWidget {
           errorWidget: (context, url, error) => Container(
             alignment: Alignment.center,
             color: SuperheroesColors.indigo,
-            child: Image.asset(SuperheroesImages.unknown_big,
+            child: Image.asset(
+              SuperheroesImages.unknown_big,
               width: 85,
-              height: 264,),
+              height: 264,
+            ),
           ),
           imageUrl: superhero.image.url,
           fit: BoxFit.cover,
@@ -475,7 +520,8 @@ class FavoriteButton extends StatelessWidget {
               !snapshot.hasData || snapshot.data == null || snapshot.data!;
           return GestureDetector(
             //  bloc.superheroStateSubject
-            onTap: () => favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
+            onTap: () =>
+                favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
             child: Container(
               width: 52,
               height: 52,
