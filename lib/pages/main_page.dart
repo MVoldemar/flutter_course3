@@ -379,25 +379,24 @@ class ListTile extends StatelessWidget {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ableToSwipe
-          ? Dismissible(
+      child:  Dismissible(
               key: ValueKey(superhero.id),
               child: SuperHeroCardInTile(superhero: superhero),
-              secondaryBackground: BackgroundCard(isLeft: false,),
-              background: BackgroundCard(isLeft: true,),
-              onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
+              secondaryBackground: BackgroundCard(isLeft: false, ableToSwipe: ableToSwipe,),
+              background: BackgroundCard(isLeft: true, ableToSwipe: ableToSwipe,),
+              onDismissed: ableToSwipe ? (_) => bloc.removeFromFavorites(superhero.id) : 
+              (_) => bloc.requestFavorite(superhero.id),
             )
-          : SuperHeroCardInTile(
-              superhero: superhero,
-            ),
+
     );
   }
 }
 
 class BackgroundCard extends StatelessWidget {
   final bool isLeft;
+  final bool ableToSwipe;
   const BackgroundCard({
-    Key? key, required this.isLeft,
+    Key? key, required this.isLeft, required this.ableToSwipe,
   }) : super(key: key);
 
   @override
@@ -407,11 +406,10 @@ class BackgroundCard extends StatelessWidget {
       height: 70,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: SuperheroesColors.red,
+        color: ableToSwipe ? SuperheroesColors.red : Colors.green,
       ),
       alignment: isLeft ? Alignment.centerLeft: Alignment.centerRight,
-      child: Text(
-        "Remove\nfrom\nfavorites".toUpperCase(),
+      child: Text(ableToSwipe ? "Remove\nfrom\nfavorites".toUpperCase() : "Add\nto\nfavorites".toUpperCase(),
         textAlign: isLeft? TextAlign.left : TextAlign.right,
         style: TextStyle(
           fontSize: 12,
@@ -436,7 +434,7 @@ class SuperHeroCardInTile extends StatelessWidget {
     return SuperheroCard(
       superheroInfo: superhero,
       onTap: () {
-        print("ID from mainpahe${superhero.id}");
+        print("ID from mainpage${superhero.id}");
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => SuperheroPage(id: superhero.id),

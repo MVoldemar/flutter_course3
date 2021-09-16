@@ -13,6 +13,8 @@ class MainBloc {
   bool changedText = false;
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
 
+  final superheroSubject = BehaviorSubject<Superhero>();
+
   final searchedSuperheroesSubject =
       BehaviorSubject<List<SuperheroInfo>>(); // проверить
   final currentTextSubject = BehaviorSubject<String>.seeded("");
@@ -20,10 +22,13 @@ class MainBloc {
   StreamSubscription? textSubscribtion;
   StreamSubscription? searchSubscribtion;
   StreamSubscription? removeFromFavoriteSubscription;
+  StreamSubscription? requestSubscription;
+  StreamSubscription? addToFavoriteSubscription;
 
   http.Client? client;
 
   MainBloc({this.client}) {
+
         textSubscribtion =
         Rx.combineLatest2<String, List<Superhero>, MainPageStateInfo>(
       currentTextSubject.distinct().debounceTime(Duration(milliseconds: 500)),
@@ -71,9 +76,42 @@ class MainBloc {
          SuperheroInfo.fromSuperhero(superhero)).toList();});
      }
 
+
+
   Stream<List<SuperheroInfo>> observedSearchedSuperheroes() =>
       searchedSuperheroesSubject;
   Stream<String> observedCurrentTextSubject() => currentTextSubject;
+
+
+  Future<Superhero> request(String id) async {
+    // await Future.delayed(Duration(seconds: 1));
+    final token = dotenv.env["SUPERHERO_TOKEN"];
+    final response = await (client ??=http.Client()).
+    get(Uri.parse("https://superheroapi.com/api/$token/$id"));
+
+    print(response.statusCode);
+    print("$id");
+    if(response.statusCode>=500){
+      throw ApiException("Server error happened");
+    }
+    if(response.statusCode<500&&response.statusCode>=400)
+    {
+      throw ApiException("Client error happened");
+    }
+    final decoded = json.decode(response.body);
+    if (decoded['response'] == 'success') {
+      print(Superhero.fromJson(decoded).name);
+      return Superhero.fromJson(decoded);
+    }
+    else if(decoded['response'] == 'error'){
+      print("error");
+      throw ApiException("Client error happened");
+    }
+    throw Exception("Unknow error happened");
+  }
+
+
+
 
   Future<List<SuperheroInfo>> search(final String text) async {
     // await Future.delayed(Duration(seconds: 1));
@@ -115,6 +153,39 @@ class MainBloc {
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
 
+  void addToFavorite(String id){
+    final superhero = superheroSubject.valueOrNull;
+    if(superhero == null){
+      print("ERROR: superhero is null");
+      return;
+    }
+    addToFavoriteSubscription?.cancel();
+    addToFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
+        .addToFavorites(superhero).asStream().listen((event) {
+      print("Added to favorites: $event");
+    },
+        onError: (error, stackTrace) =>
+            print("Error happend in addToFavorites: $error, $stackTrace"));
+  }
+
+
+  void requestFavorite(String id){
+    print("Add to favorite from MainPage $id");
+    requestSubscription?.cancel();
+    requestSubscription = request(id).asStream( ).listen(
+          (superhero) {
+        superheroSubject.add(superhero);
+        addToFavorite(id);
+      },
+      onError: (error, stackTrace) {
+        print("Error happened in requestSuperhero: $error, $stackTrace");
+      },
+    );
+  }
+
+
+
+
   void  removeFromFavorites(final String id){
     removeFromFavoriteSubscription?.cancel();
     removeFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
@@ -131,7 +202,7 @@ class MainBloc {
 
 
   void retry() {
-    search(currentTextSubject.value);
+    //search(currentTextSubject.value);
     print("RETRY: ${currentTextSubject.value}");
     searchForSuperheroes(currentTextSubject.value);
   }
@@ -155,6 +226,9 @@ class MainBloc {
     textSubscribtion?.cancel();
     removeFromFavoriteSubscription?.cancel();
     client?.close();
+    requestSubscription?.cancel();
+    superheroSubject.close();
+    addToFavoriteSubscription?.cancel();
   }
 }
 

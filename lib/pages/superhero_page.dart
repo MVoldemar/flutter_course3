@@ -519,7 +519,7 @@ class FavoriteButton extends StatelessWidget {
           final favorite =
               !snapshot.hasData || snapshot.data == null || snapshot.data!;
           return GestureDetector(
-            //  bloc.superheroStateSubject
+            //  bloc.superheroStateSubjectщи
             onTap: () =>
                 favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
             child: Container(

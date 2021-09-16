@@ -17,9 +17,23 @@ class FavoriteSuperheroesStorage {
 
   Future<bool> addToFavorites(final Superhero superhero) async {
     final rawSuperheroes = await _getRawSuperheroes();
+
+    final rawSuperhero = await getSuperhero(superhero.id);//получили супергероя из хранилища
+    print("Проверяем, если ли сырой супергерой у нас в хранилище");
+    if(rawSuperhero != null){
+      print("У нас уже есть супергерой с id = ${superhero.id}");
+      updater.add(null);
+      return false;
+
+        // _setRawSuperheroes(rawSuperheroes);
+          }
     rawSuperheroes.add(json.encode(superhero.toJson()));
     return _setRawSuperheroes(rawSuperheroes);
   }
+
+  // Future<bool> _noAddToFavorites() async{
+  //   return false;
+  // }
 
   Future<bool> removeFromFavorites(final String id) async {
     final superheroes = await _getSuperheroes();
