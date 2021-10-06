@@ -384,8 +384,14 @@ class ListTile extends StatelessWidget {
               child: SuperHeroCardInTile(superhero: superhero),
               secondaryBackground: BackgroundCard(isLeft: false, ableToSwipe: ableToSwipe,),
               background: BackgroundCard(isLeft: true, ableToSwipe: ableToSwipe,),
-              onDismissed: ableToSwipe ? (_) => bloc.removeFromFavorites(superhero.id) : 
-              (_) => bloc.requestFavorite(superhero.id),
+              onDismissed:  (_) => bloc.removeFromFavorites(superhero.id),
+              //(_) => bloc.requestFavorite(superhero.id),
+              confirmDismiss: ableToSwipe ? (_) async {
+                return true;
+              } : (_) async {
+                bloc.requestFavorite(superhero.id);
+                return false;
+                },
 
             )
 

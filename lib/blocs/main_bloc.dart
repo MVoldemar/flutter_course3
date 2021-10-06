@@ -79,8 +79,8 @@ class MainBloc {
 
 
   Stream<List<SuperheroInfo>> observedSearchedSuperheroes() =>
-      searchedSuperheroesSubject;
-  Stream<String> observedCurrentTextSubject() => currentTextSubject;
+      searchedSuperheroesSubject.distinct();
+  Stream<String> observedCurrentTextSubject() => currentTextSubject.distinct();
 
 
   Future<Superhero> request(String id) async {
